@@ -1,9 +1,12 @@
+# project files
+
+/libs
+
 # Visual Studio
 
 obj
 bin
 /.vs
-
 
 # nuget
 

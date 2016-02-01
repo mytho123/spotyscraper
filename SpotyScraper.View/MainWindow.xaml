@@ -23,17 +23,27 @@
 
       <Grid Grid.Row="0">
         <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="Auto" />
           <ColumnDefinition Width="*" />
-          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" Text="Select your scraper"
-                   VerticalAlignment="Center" />
-        <ComboBox Grid.Column="1" ItemsSource="{Binding Scrapers}"
-                  DisplayMemberPath="Name"
-                  SelectedItem="{Binding SelectedScraper}" />
-        <Button Grid.Column="2" Content="Scrap !" Command="{Binding ScrapCommand}" />
+        <StackPanel Grid.Column="0">
+          <TextBlock Text="Select your scraper"
+                     HorizontalAlignment="Center" />
+          <ComboBox ItemsSource="{Binding Scrapers}"
+                    DisplayMemberPath="Name"
+                    SelectedItem="{Binding SelectedScraper}" />
+          <Button Content="Scrap !" Command="{Binding ScrapCommand}" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+          <TextBlock Text="Select your stream service"
+                     HorizontalAlignment="Center" />
+          <ComboBox ItemsSource="{Binding StreamServices}"
+                    DisplayMemberPath="Name"
+                    SelectedItem="{Binding SelectedStreamService}" />
+          <Button Content="Resolve !" Command="{Binding ResolveCommand}" />
+        </StackPanel>
       </Grid>
 
       <Grid Grid.Row="1">

@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Threading;
 using SpotyScraper.Model.Scrapers;
+using SpotyScraper.Model.StreamServices;
 using SpotyScraper.Model.Tracks;
 using SpotyScraper.Utils;
 using System;
@@ -17,8 +18,10 @@ namespace SpotyScraper.ViewModel
         public MainViewModel()
         {
             this.ScrapCommand = new RelayCommand(ScrapCommand_Execute, ScrapCommand_CanExecute);
+            this.ResolveCommand = new RelayCommand(ResolveCommand_Execute, ResolveCommand_CanExecute);
 
             this.InitScrapers();
+            this.InitStreamServices();
         }
 
         #region props
@@ -50,6 +53,32 @@ namespace SpotyScraper.ViewModel
         }
 
         public ObservableCollection<Track> ScrapedTracks { get; } = new ObservableCollection<Track>();
+
+        public ObservableCollection<IStreamServiceData> StreamServices { get; } = new ObservableCollection<IStreamServiceData>();
+
+        private IStreamServiceData _selectedStreamService;
+
+        public IStreamServiceData SelectedStreamService
+        {
+            get { return _selectedStreamService; }
+            set
+            {
+                this.Set(ref _selectedStreamService, value);
+                this.ResolveCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        private bool _isResolving;
+
+        public bool IsResolving
+        {
+            get { return _isResolving; }
+            set
+            {
+                this.Set(ref _isResolving, value);
+                this.ResolveCommand.RaiseCanExecuteChanged();
+            }
+        }
 
         #endregion props
 
@@ -90,12 +119,42 @@ namespace SpotyScraper.ViewModel
             });
         }
 
+        public RelayCommand ResolveCommand { get; }
+
+        private bool ResolveCommand_CanExecute()
+        {
+            return this.SelectedStreamService != null && !this.IsResolving;
+        }
+
+        private async void ResolveCommand_Execute()
+        {
+            var service = StreamServicesManager.Instance.GetService(this.SelectedStreamService);
+            if (service == null)
+                return;
+
+            this.IsResolving = true;
+            try
+            {
+                await service.ResolveAsync(this.ScrapedTracks);
+            }
+            finally
+            {
+                this.IsResolving = false;
+            }
+        }
+
         #endregion Commands
 
         private void InitScrapers()
         {
             this.Scrapers.AddRange(ScrapersManager.Instance.GetScrapersData());
             this.SelectedScraper = this.Scrapers.FirstOrDefault();
+        }
+
+        private void InitStreamServices()
+        {
+            this.StreamServices.AddRange(StreamServicesManager.Instance.GetServicesData());
+            this.SelectedStreamService = this.StreamServices.FirstOrDefault();
         }
     }
 }

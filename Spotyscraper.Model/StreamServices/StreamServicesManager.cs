@@ -8,19 +8,19 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpotyScraper.Model.Scrapers
+namespace SpotyScraper.Model.StreamServices
 {
-    public class ScrapersManager
+    public class StreamServicesManager
     {
         [ImportMany]
-        private IEnumerable<Lazy<IScraper, IScraperData>> _scrapers;
+        private IEnumerable<Lazy<IStreamService, IStreamServiceData>> _services;
 
-        private ScrapersManager()
+        private StreamServicesManager()
         {
             DiscoverScrapers();
         }
 
-        public static ScrapersManager Instance { get; } = new ScrapersManager();
+        public static StreamServicesManager Instance { get; } = new StreamServicesManager();
 
         private void DiscoverScrapers()
         {
@@ -42,14 +42,14 @@ namespace SpotyScraper.Model.Scrapers
             }
         }
 
-        public IEnumerable<IScraperData> GetScrapersData()
+        public IEnumerable<IStreamServiceData> GetServicesData()
         {
-            return _scrapers.Select(x => x.Metadata);
+            return _services.Select(x => x.Metadata);
         }
 
-        public IScraper GetScraper(IScraperData scraperData)
+        public IStreamService GetService(IStreamServiceData serviceData)
         {
-            return _scrapers.FirstOrDefault(x => x.Metadata == scraperData).Value;
+            return _services.FirstOrDefault(x => x.Metadata == serviceData).Value;
         }
     }
 }
