@@ -4,9 +4,24 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SpotyScraper.View"
+        xmlns:vm="clr-namespace:SpotyScraper.ViewModel;assembly=SpotyScraper.ViewModel"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        DataContext="{Binding Main, Source={x:Static vm:ViewModelLocator.Instance}}"
+        Title="SpotyScraper" Height="350" Width="525">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+
+    <Grid Grid.Column="0">
+      <StackPanel>
+        <ComboBox ItemsSource="{Binding Scrapers}"
+                  DisplayMemberPath="Name"
+                  SelectedItem="{Binding SelectedScraper}" />
+        <Button Content="Scrap !" Command="{Binding ScrapCommand}" />
+      </StackPanel>
     </Grid>
+  </Grid>
 </Window>

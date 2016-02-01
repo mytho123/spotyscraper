@@ -14,6 +14,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotyScraper.OuiFM", "SpotyScraper.OuiFM\SpotyScraper.OuiFM.csproj", "{E384F3D0-C407-4779-9A03-3BC5405E0B3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotyScraper.Utils", "SpotyScraper.Utils\SpotyScraper.Utils.csproj", "{6855E0FE-5AD2-40FE-8661-F2B608FFF153}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +36,14 @@ Global
 		{893FB525-16D2-4954-A8C6-C0809500FE9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{893FB525-16D2-4954-A8C6-C0809500FE9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{893FB525-16D2-4954-A8C6-C0809500FE9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E384F3D0-C407-4779-9A03-3BC5405E0B3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E384F3D0-C407-4779-9A03-3BC5405E0B3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E384F3D0-C407-4779-9A03-3BC5405E0B3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E384F3D0-C407-4779-9A03-3BC5405E0B3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6855E0FE-5AD2-40FE-8661-F2B608FFF153}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6855E0FE-5AD2-40FE-8661-F2B608FFF153}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6855E0FE-5AD2-40FE-8661-F2B608FFF153}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6855E0FE-5AD2-40FE-8661-F2B608FFF153}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

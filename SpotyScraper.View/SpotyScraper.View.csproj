@@ -116,6 +116,16 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SpotyScraper.Utils\SpotyScraper.Utils.csproj">
+      <Project>{6855e0fe-5ad2-40fe-8661-f2b608fff153}</Project>
+      <Name>SpotyScraper.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SpotyScraper.ViewModel\SpotyScraper.ViewModel.csproj">
+      <Project>{f19eef94-fcac-44d0-9304-5abb77fbe85e}</Project>
+      <Name>SpotyScraper.ViewModel</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

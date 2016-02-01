@@ -60,10 +60,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseVM.cs" />
+    <Compile Include="MainViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModelLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Spotyscraper.Model\SpotyScraper.Model.csproj">
+      <Project>{f07534c1-998f-4180-8bdf-ec3af29394b3}</Project>
+      <Name>SpotyScraper.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SpotyScraper.Utils\SpotyScraper.Utils.csproj">
+      <Project>{6855e0fe-5ad2-40fe-8661-f2b608fff153}</Project>
+      <Name>SpotyScraper.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
