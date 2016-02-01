@@ -65,6 +65,7 @@
     <Compile Include="Scrapers\IScraperData.cs" />
     <Compile Include="Scrapers\ScrapersManager.cs" />
     <Compile Include="Scrapers\IScraper.cs" />
+    <Compile Include="Tracks\Track.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

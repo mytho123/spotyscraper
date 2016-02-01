@@ -16,12 +16,29 @@
     </Grid.ColumnDefinitions>
 
     <Grid Grid.Column="0">
-      <StackPanel>
-        <ComboBox ItemsSource="{Binding Scrapers}"
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+
+      <Grid Grid.Row="0">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Column="0" Text="Select your scraper"
+                   VerticalAlignment="Center" />
+        <ComboBox Grid.Column="1" ItemsSource="{Binding Scrapers}"
                   DisplayMemberPath="Name"
                   SelectedItem="{Binding SelectedScraper}" />
-        <Button Content="Scrap !" Command="{Binding ScrapCommand}" />
-      </StackPanel>
+        <Button Grid.Column="2" Content="Scrap !" Command="{Binding ScrapCommand}" />
+      </Grid>
+
+      <Grid Grid.Row="1">
+        <DataGrid ItemsSource="{Binding ScrapedTracks}" />
+      </Grid>
     </Grid>
   </Grid>
 </Window>

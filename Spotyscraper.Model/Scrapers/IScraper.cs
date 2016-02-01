@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpotyScraper.Model.Tracks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,7 @@ namespace SpotyScraper.Model.Scrapers
     {
         string Name { get; }
         string Description { get; }
+
+        IEnumerable<Track> Scrap();
     }
 }

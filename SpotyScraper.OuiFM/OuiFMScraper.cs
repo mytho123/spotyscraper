@@ -1,8 +1,11 @@
-﻿using SpotyScraper.Model.Scrapers;
+﻿using HtmlAgilityPack;
+using SpotyScraper.Model.Scrapers;
+using SpotyScraper.Model.Tracks;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,5 +21,65 @@ namespace SpotyScraper.OuiFM
 
         public string Name { get; } = NAME;
         public string Description { get; } = DESCRIPTION;
+
+        public IEnumerable<Track> Scrap()
+        {
+            foreach (var pageURL in this.GetAllPagesURL())
+            {
+                foreach (var track in this.ScrapPage(pageURL))
+                {
+                    yield return track;
+                }
+            }
+        }
+
+        private IEnumerable<string> GetAllPagesURL()
+        {
+            var now = DateTime.Now;
+
+            for (int day = 6; day >= 0; day--)
+            {
+                for (int hour = 0; hour < 24; hour++)
+                {
+                    var offset = new TimeSpan(day, hour, 0, 0);
+                    yield return this.GetPageURL(now - offset);
+                }
+            }
+        }
+
+        private string GetPageURL(DateTime date)
+        {
+            var month = date.Month.ToString("D2");
+            var day = date.Day.ToString("D2");
+            return $"http://www.ouifm.fr/wp-admin/admin-ajax.php?action=get_piges_results&flux=rock&date={date.Year}-{month}-{day}&time={date.Hour}";
+        }
+
+        private IEnumerable<Track> ScrapPage(string pageURL)
+        {
+            var request = WebRequest.CreateHttp(pageURL);
+            var response = request.GetResponse();
+
+            using (var stream = response.GetResponseStream())
+            {
+                var doc = new HtmlDocument();
+                doc.Load(stream);
+                foreach (var infoNode in GetDescendants(doc.DocumentNode, "div", "info"))
+                {
+                    var artistNode = GetDescendants(infoNode, "strong", "artist").FirstOrDefault();
+                    var titleNode = GetDescendants(infoNode, "strong", "title").FirstOrDefault();
+                    if (artistNode != null && titleNode != null)
+                    {
+                        yield return new Track(titleNode.InnerText, artistNode.InnerText);
+                    }
+                }
+            }
+        }
+
+        private static IEnumerable<HtmlNode> GetDescendants(HtmlNode node, string nodeName, string nodeClass)
+        {
+            return node.Descendants()
+                .Where(x => x.Name == nodeName)
+                .Where(x => x.GetAttributeValue("class", (string)null) == nodeClass);
+        }
     }
 }
