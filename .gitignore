@@ -1,0 +1,10 @@
+# Visual Studio
+
+obj
+bin
+/.vs
+
+
+# nuget
+
+packages
