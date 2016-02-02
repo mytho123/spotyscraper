@@ -100,8 +100,14 @@ namespace SpotyScraper.Spotify
 
         public async Task ResolveAsync(Track track)
         {
-            var q = $"track:\"{track.Title}\"&artist:\"{track.Artist}\"";
+            var artist = track.Artists.FirstOrDefault();
+            var q = $"track:\"{track.Title}\"&artist:\"{artist}\"";
+
             var searchItem = await _spotify.SearchItemsAsync(q, SearchType.Track);
+
+            var spotifyTracks = searchItem?.Tracks?.Items.Select(x => new SpotifyTrack(x));
+            if (spotifyTracks != null)
+                track.SetMatches(spotifyTracks);
         }
     }
 }

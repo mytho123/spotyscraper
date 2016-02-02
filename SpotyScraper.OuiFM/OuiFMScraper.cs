@@ -68,7 +68,7 @@ namespace SpotyScraper.OuiFM
                     var titleNode = GetDescendants(infoNode, "strong", "title").FirstOrDefault();
                     if (artistNode != null && titleNode != null)
                     {
-                        yield return new Track(titleNode.InnerText, artistNode.InnerText);
+                        yield return new Track(titleNode.InnerText, new string[] { artistNode.InnerText });
                     }
                 }
             }

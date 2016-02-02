@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DuoVia.FuzzyStrings, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DuoVia.FuzzyStrings.1.0.1\lib\net40\DuoVia.FuzzyStrings.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="GalaSoft.MvvmLight, Version=5.2.0.37222, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
       <Private>True</Private>
@@ -68,6 +72,7 @@
     <Compile Include="StreamServices\IStreamService.cs" />
     <Compile Include="StreamServices\IStreamServiceData.cs" />
     <Compile Include="StreamServices\StreamServicesManager.cs" />
+    <Compile Include="Tracks\ITrackMatch.cs" />
     <Compile Include="Tracks\Track.cs" />
   </ItemGroup>
   <ItemGroup>
