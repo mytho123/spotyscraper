@@ -8,6 +8,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotyScraper.ViewModel", "SpotyScraper.ViewModel\SpotyScraper.ViewModel.csproj", "{F19EEF94-FCAC-44D0-9304-5ABB77FBE85E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotyScraper.View", "SpotyScraper.View\SpotyScraper.View.csproj", "{893FB525-16D2-4954-A8C6-C0809500FE9B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BB3FA20F-4571-4353-8241-45013D23E014} = {BB3FA20F-4571-4353-8241-45013D23E014}
+		{E384F3D0-C407-4779-9A03-3BC5405E0B3D} = {E384F3D0-C407-4779-9A03-3BC5405E0B3D}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FDB919EB-761E-4716-B872-66BEB41014ED}"
 	ProjectSection(SolutionItems) = preProject
