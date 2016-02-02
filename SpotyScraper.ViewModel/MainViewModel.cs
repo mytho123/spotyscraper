@@ -135,7 +135,7 @@ namespace SpotyScraper.ViewModel
             this.IsResolving = true;
             try
             {
-                await service.ResolveAsync(this.ScrapedTracks);
+                await service.ResolveAsync(this.ScrapedTracks.ToArray());
             }
             finally
             {
