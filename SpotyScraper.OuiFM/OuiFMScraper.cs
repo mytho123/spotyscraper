@@ -4,6 +4,7 @@ using SpotyScraper.Model.Tracks;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -26,6 +27,7 @@ namespace SpotyScraper.OuiFM
         {
             foreach (var pageURL in this.GetAllPagesURL())
             {
+                Debug.WriteLine($"{DateTime.Now} Oui FM scraper: {pageURL.Substring(79)}");
                 foreach (var track in this.ScrapPage(pageURL))
                 {
                     yield return track;
