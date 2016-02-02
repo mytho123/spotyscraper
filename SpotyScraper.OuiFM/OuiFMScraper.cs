@@ -39,13 +39,10 @@ namespace SpotyScraper.OuiFM
         {
             var now = DateTime.Now;
 
-            for (int day = 6; day >= 0; day--)
+            for (int hour = 24 * 7; hour >= 0; hour--)
             {
-                for (int hour = 0; hour < 24; hour++)
-                {
-                    var offset = new TimeSpan(day, hour, 0, 0);
-                    yield return this.GetPageURL(now - offset);
-                }
+                var offset = TimeSpan.FromHours(hour);
+                yield return this.GetPageURL(now - offset);
             }
         }
 
