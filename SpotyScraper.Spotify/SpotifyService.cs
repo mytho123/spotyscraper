@@ -13,6 +13,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace SpotyScraper.Spotify
 {
@@ -120,13 +121,21 @@ namespace SpotyScraper.Spotify
         public async Task ResolveAsync(Track track)
         {
             var artist = track.Artists.FirstOrDefault();
-            var q = $"track:\"{track.Title}\"&artist:\"{artist}\"";
+            var q = $"track:%22{track.Title}%22&artist:\"{artist}\"";
+            q = PreprocessRequest(q);
 
             var searchItem = await _spotify.SearchItemsAsync(q, SearchType.Track);
 
             var spotifyTracks = searchItem?.Tracks?.Items.Select(x => new SpotifyTrack(x));
             if (spotifyTracks != null)
                 track.SetMatches(spotifyTracks);
+        }
+
+        private static string PreprocessRequest(string request)
+        {
+            request = request.Replace("\"", "%22");
+            request = request.Replace("&", "%26");
+            return request;
         }
     }
 }
