@@ -20,8 +20,6 @@ namespace SpotyScraper.OuiFM
         public const string NAME = "Oui FM scraper";
         public const string DESCRIPTION = "A scraper for Oui FM radio station";
 
-        private const string EDITOUIFM = " (edit oui fm)";
-
         public string Name { get; } = NAME;
         public string Description { get; } = DESCRIPTION;
 
@@ -76,17 +74,39 @@ namespace SpotyScraper.OuiFM
 
                     if (artistNode != null && titleNode != null)
                     {
-                        var artists = new string[] { artistNode.InnerText };
-                        var title = titleNode.InnerText;
+                        var track = ProcessTrack(titleNode.InnerText, artistNode.InnerText);
 
-                        if (title.ToLowerInvariant().EndsWith(EDITOUIFM))
-                            title = title.Remove(title.Length - EDITOUIFM.Length);
-
-                        yield return new Track(title, artists);
+                        if (track != null)
+                            yield return track;
                     }
                 }
             }
         }
+
+        #region Tracks pre processing
+
+        private const string EDITOUIFM = " (edit oui fm)";
+        private const string ARTIST_OUIFM = "oui fm";
+        private const string TITLE_CHRONIQUE_NUMERIQUE = "chronique numerique";
+
+        private static Track ProcessTrack(string title, string artistsText)
+        {
+            var lowerTitle = title.ToLowerInvariant();
+            if (lowerTitle.Contains(TITLE_CHRONIQUE_NUMERIQUE))
+                return null;
+
+            if (artistsText.ToLowerInvariant() == ARTIST_OUIFM)
+                return null;
+
+            var artists = new string[] { artistsText };
+
+            if (lowerTitle.EndsWith(EDITOUIFM))
+                title = title.Remove(title.Length - EDITOUIFM.Length);
+
+            return new Track(title, artists);
+        }
+
+        #endregion Tracks pre processing
 
         private static IEnumerable<HtmlNode> GetDescendants(HtmlNode node, string nodeName, string nodeClass)
         {
