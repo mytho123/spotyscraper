@@ -8,11 +8,10 @@
         xmlns:conv="clr-namespace:SpotyScraper.View.Converters"
         mc:Ignorable="d"
         DataContext="{Binding Main, Source={x:Static vm:ViewModelLocator.Instance}}"
-        Title="SpotyScraper" Height="350" Width="525">
+        Title="SpotyScraper"
+        Width="1024" Height="768" SizeToContent="Manual">
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto" />
-      <ColumnDefinition Width="Auto" />
       <ColumnDefinition Width="*" />
     </Grid.ColumnDefinitions>
 
@@ -35,6 +34,10 @@
                     DisplayMemberPath="Name"
                     SelectedItem="{Binding SelectedScraper}" />
           <Button Content="Scrap !" Command="{Binding ScrapCommand}" />
+          <TextBlock>
+            <Run Text="{Binding ScrapedTracks.Count, Mode=OneWay}" />
+            <Run Text=" tracks" />
+          </TextBlock>
         </StackPanel>
 
         <StackPanel Grid.Column="1">
@@ -48,15 +51,55 @@
       </Grid>
 
       <Grid Grid.Row="1">
-        <DataGrid ItemsSource="{Binding ScrapedTracks}" AutoGenerateColumns="False" IsReadOnly="True">
+        <DataGrid ItemsSource="{Binding ScrapedTracks}"
+                  SelectionMode="Single"
+                  AutoGenerateColumns="False" CanUserSortColumns="True"
+                  RowDetailsVisibilityMode="VisibleWhenSelected"
+                  IsReadOnly="True"
+                  HorizontalScrollBarVisibility="Disabled">
           <DataGrid.Columns>
-            <DataGridTextColumn Header="Title" Binding="{Binding Title}" />
-            <DataGridTextColumn Header="Artists" Binding="{Binding Artists, Converter={x:Static conv:StringJoinConverter.Instance}}" />
-            <DataGridTextColumn Header="Matches #" Binding="{Binding Matches.Count}" />
-            <DataGridTextColumn Header="Selected match title" Binding="{Binding SelectedMatch.Title}" />
-            <DataGridTextColumn Header="Selected match artist" Binding="{Binding SelectedMatch.Artists, Converter={x:Static conv:StringJoinConverter.Instance}}" />
-            <DataGridTextColumn Header="Selected match score" Binding="{Binding SelectedMatchScore}" />
+            <DataGridTextColumn Header="Title"
+                                Width="*"
+                                Binding="{Binding Title}" />
+            <DataGridTextColumn Header="Artists"
+                                Width="*"
+                                Binding="{Binding Artists, Converter={x:Static conv:StringJoinConverter.Instance}}" />
+            <DataGridTextColumn Header="Matches #"
+                                Width="Auto"
+                                Binding="{Binding Matches.Count}" />
+            <DataGridTextColumn Header="Selected match title"
+                                Width="*"
+                                Binding="{Binding SelectedMatch.Title}" />
+            <DataGridTextColumn Header="Selected match artist"
+                                Width="*"
+                                Binding="{Binding SelectedMatch.Artists, Converter={x:Static conv:StringJoinConverter.Instance}}" />
+            <DataGridTextColumn Header="Selected match score"
+                                Width="Auto"
+                                Binding="{Binding SelectedMatchScore, StringFormat='{}{0:#,#.00}'}" />
           </DataGrid.Columns>
+
+          <DataGrid.RowDetailsTemplate>
+            <DataTemplate>
+              <Grid>
+                <DataGrid ItemsSource="{Binding Matches}"
+                          SelectionMode="Single"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Header="Title"
+                                        Width="*"
+                                        Binding="{Binding Key.Title}" />
+                    <DataGridTextColumn Header="Artists"
+                                        Width="*"
+                                        Binding="{Binding Key.Artists, Converter={x:Static conv:StringJoinConverter.Instance}}" />
+                    <DataGridTextColumn Header="Score"
+                                        Width="Auto"
+                                        Binding="{Binding Value, StringFormat='{}{0:#,#.00}'}" />
+                  </DataGrid.Columns>
+                </DataGrid>
+              </Grid>
+            </DataTemplate>
+          </DataGrid.RowDetailsTemplate>
         </DataGrid>
       </Grid>
     </Grid>
