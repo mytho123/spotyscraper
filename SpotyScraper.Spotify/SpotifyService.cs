@@ -124,9 +124,11 @@ namespace SpotyScraper.Spotify
             var q = $"track:%22{track.Title}%22&artist:\"{artist}\"";
             q = PreprocessRequest(q);
 
-            var searchItem = await _spotify.SearchItemsAsync(q, SearchType.Track);
+            var searchItem = await _spotify.SearchItemsAsync(q, SearchType.Track, 50);
 
-            var spotifyTracks = searchItem?.Tracks?.Items.Select(x => new SpotifyTrack(x));
+            var spotifyTracks = searchItem?.Tracks?.Items
+                .OrderByDescending(x => x.Popularity)
+                .Select(x => new SpotifyTrack(x));
             if (spotifyTracks != null)
                 track.SetMatches(spotifyTracks);
         }

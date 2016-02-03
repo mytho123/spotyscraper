@@ -22,11 +22,15 @@ namespace SpotyScraper.Spotify
             this.Title = track.Name;
             this.Artists = track.Artists.Select(x => x.Name).ToArray();
             this.SpotifyId = track.Id;
+            this.Popularity = track.Popularity;
+            this.Album = track.Album.Name;
         }
 
         public string Title { get; }
         public string[] Artists { get; }
+        public string Album { get; }
         public string SpotifyId { get; }
+        public int Popularity { get; }
 
         public override string ToString()
         {
