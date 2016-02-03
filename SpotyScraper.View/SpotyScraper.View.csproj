@@ -121,6 +121,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SpotyScraper.OuiFM\SpotyScraper.OuiFM.csproj">
+      <Project>{e384f3d0-c407-4779-9a03-3bc5405e0b3d}</Project>
+      <Name>SpotyScraper.OuiFM</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SpotyScraper.Spotify\SpotyScraper.Spotify.csproj">
+      <Project>{bb3fa20f-4571-4353-8241-45013d23e014}</Project>
+      <Name>SpotyScraper.Spotify</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SpotyScraper.Utils\SpotyScraper.Utils.csproj">
       <Project>{6855e0fe-5ad2-40fe-8661-f2b608fff153}</Project>
       <Name>SpotyScraper.Utils</Name>
@@ -132,7 +140,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y "$(ProjectDir)..\libs\*.dll" "$(TargetDir)"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
