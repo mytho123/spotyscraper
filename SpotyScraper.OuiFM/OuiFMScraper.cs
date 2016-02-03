@@ -20,6 +20,8 @@ namespace SpotyScraper.OuiFM
         public const string NAME = "Oui FM scraper";
         public const string DESCRIPTION = "A scraper for Oui FM radio station";
 
+        private const string EDITOUIFM = " (edit oui fm)";
+
         public string Name { get; } = NAME;
         public string Description { get; } = DESCRIPTION;
 
@@ -66,9 +68,16 @@ namespace SpotyScraper.OuiFM
                 {
                     var artistNode = GetDescendants(infoNode, "strong", "artist").FirstOrDefault();
                     var titleNode = GetDescendants(infoNode, "strong", "title").FirstOrDefault();
+
                     if (artistNode != null && titleNode != null)
                     {
-                        yield return new Track(titleNode.InnerText, new string[] { artistNode.InnerText });
+                        var artists = new string[] { artistNode.InnerText };
+                        var title = titleNode.InnerText;
+
+                        if (title.ToLowerInvariant().EndsWith(EDITOUIFM))
+                            title = title.Remove(title.Length - EDITOUIFM.Length);
+
+                        yield return new Track(title, artists);
                     }
                 }
             }
