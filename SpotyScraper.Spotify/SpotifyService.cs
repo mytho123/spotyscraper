@@ -4,6 +4,7 @@ using SpotifyAPI.Web.Enums;
 using SpotifyAPI.Web.Models;
 using SpotyScraper.Model.StreamServices;
 using SpotyScraper.Model.Tracks;
+using SpotyScraper.Spotify.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -40,8 +41,16 @@ namespace SpotyScraper.Spotify
 
         private async Task<bool> CheckAuthentication()
         {
-            this.StartAuthentication();
-            await _authenticationSemaphore.WaitAsync();
+            if (Settings.Default.TokenExpirationDate > DateTime.Now)
+            {
+                InitSpotifyWebAPI();
+            }
+            else
+            {
+                this.StartAuthentication();
+                await _authenticationSemaphore.WaitAsync();
+            }
+
             return _spotify != null;
         }
 
@@ -54,7 +63,7 @@ namespace SpotyScraper.Spotify
                 Scope = Scope.PlaylistReadPrivate,
                 State = _state,
             };
-            _authentication.OnResponseReceivedEvent += _authentication_OnResponseReceivedEvent; ;
+            _authentication.OnResponseReceivedEvent += _authentication_OnResponseReceivedEvent;
 
             _authentication.StartHttpServer(PORT);
             _authentication.DoAuth();
@@ -72,17 +81,27 @@ namespace SpotyScraper.Spotify
                 if (token.Error != null)
                     throw new InvalidOperationException($"{nameof(SpotifyService)} - Error: {token.Error}");
 
-                _spotify = new SpotifyWebAPI
-                {
-                    UseAuth = true,
-                    AccessToken = token.AccessToken,
-                    TokenType = token.TokenType
-                };
+                Settings.Default.Token = token.AccessToken;
+                Settings.Default.TokenType = token.TokenType;
+                Settings.Default.TokenExpirationDate = DateTime.Now + TimeSpan.FromSeconds(token.ExpiresIn);
+                Settings.Default.Save();
+
+                InitSpotifyWebAPI();
             }
             finally
             {
                 _authenticationSemaphore.Release();
             }
+        }
+
+        private void InitSpotifyWebAPI()
+        {
+            _spotify = new SpotifyWebAPI
+            {
+                UseAuth = true,
+                AccessToken = Settings.Default.Token,
+                TokenType = Settings.Default.TokenType,
+            };
         }
 
         #endregion Authentication
