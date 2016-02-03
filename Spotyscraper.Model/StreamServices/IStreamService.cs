@@ -13,5 +13,7 @@ namespace SpotyScraper.Model.StreamServices
         string Description { get; }
 
         Task ResolveAsync(IEnumerable<Track> tracks);
+
+        Task CreatePlaylist(string playlistName, IEnumerable<ITrackMatch> tracks);
     }
 }

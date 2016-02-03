@@ -19,6 +19,7 @@ namespace SpotyScraper.ViewModel
         {
             this.ScrapCommand = new RelayCommand(ScrapCommand_Execute, ScrapCommand_CanExecute);
             this.ResolveCommand = new RelayCommand(ResolveCommand_Execute, ResolveCommand_CanExecute);
+            this.CreatePlaylistCommand = new RelayCommand(CreatePlaylistCommand_Execute, CreatePlaylistCommand_CanExecute);
 
             this.InitScrapers();
             this.InitStreamServices();
@@ -35,8 +36,10 @@ namespace SpotyScraper.ViewModel
             get { return _selectedScraper; }
             set
             {
+                var oldValue = _selectedScraper;
                 this.Set(ref _selectedScraper, value);
                 this.ScrapCommand.RaiseCanExecuteChanged();
+                this.UpdatePlaylistName(oldValue, value);
             }
         }
 
@@ -78,6 +81,14 @@ namespace SpotyScraper.ViewModel
                 this.Set(ref _isResolving, value);
                 this.ResolveCommand.RaiseCanExecuteChanged();
             }
+        }
+
+        private string _playlistName;
+
+        public string PlaylistName
+        {
+            get { return _playlistName; }
+            set { this.Set(ref _playlistName, value); }
         }
 
         #endregion props
@@ -143,6 +154,25 @@ namespace SpotyScraper.ViewModel
             }
         }
 
+        public RelayCommand CreatePlaylistCommand { get; }
+
+        private bool CreatePlaylistCommand_CanExecute()
+        {
+            return true;
+        }
+
+        private async void CreatePlaylistCommand_Execute()
+        {
+            var service = StreamServicesManager.Instance.GetService(this.SelectedStreamService);
+            if (service == null)
+                return;
+
+            var tracks = this.ScrapedTracks
+                .Select(x => x.SelectedMatch.Key)
+                .Where(x => x != null);
+            await service.CreatePlaylist(this.PlaylistName, tracks);
+        }
+
         #endregion Commands
 
         private void InitScrapers()
@@ -155,6 +185,24 @@ namespace SpotyScraper.ViewModel
         {
             this.StreamServices.AddRange(StreamServicesManager.Instance.GetServicesData());
             this.SelectedStreamService = this.StreamServices.FirstOrDefault();
+        }
+
+        private void UpdatePlaylistName(IScraperData oldValue, IScraperData newValue)
+        {
+            // if user has modified playlist name, don't overwrite it
+            if (oldValue != null)
+            {
+                var oldName = this.GetPlaylistName(oldValue);
+                if (this.PlaylistName != oldName)
+                    return;
+            }
+
+            this.PlaylistName = this.GetPlaylistName(newValue);
+        }
+
+        private string GetPlaylistName(IScraperData scraper)
+        {
+            return $"SpotyScraper - {scraper?.Name}";
         }
     }
 }

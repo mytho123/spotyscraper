@@ -24,12 +24,14 @@ namespace SpotyScraper.Spotify
             this.SpotifyId = track.Id;
             this.Popularity = track.Popularity;
             this.Album = track.Album.Name;
+            this.SpotifyUri = track.Uri;
         }
 
         public string Title { get; }
         public string[] Artists { get; }
         public string Album { get; }
         public string SpotifyId { get; }
+        public string SpotifyUri { get; }
         public int Popularity { get; }
 
         public override string ToString()

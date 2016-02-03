@@ -25,6 +25,7 @@
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="*" />
           <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Column="0">
@@ -47,6 +48,13 @@
                     DisplayMemberPath="Name"
                     SelectedItem="{Binding SelectedStreamService}" />
           <Button Content="Resolve !" Command="{Binding ResolveCommand}" />
+        </StackPanel>
+
+        <StackPanel Grid.Column="2">
+          <TextBlock Text="Enter playlist name"
+                     HorizontalAlignment="Center" />
+          <TextBox Text="{Binding PlaylistName}" />
+          <Button Content="Create playlist !" Command="{Binding CreatePlaylistCommand}" />
         </StackPanel>
       </Grid>
 

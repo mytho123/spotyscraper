@@ -8,6 +8,7 @@ using SpotyScraper.Spotify.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -61,7 +62,7 @@ namespace SpotyScraper.Spotify
             {
                 RedirectUri = $"http://localhost:{PORT}",
                 ClientId = CLIENTID,
-                Scope = Scope.PlaylistReadPrivate,
+                Scope = Scope.PlaylistReadPrivate | Scope.PlaylistModifyPrivate | Scope.PlaylistModifyPublic,
                 State = _state,
             };
             _authentication.OnResponseReceivedEvent += _authentication_OnResponseReceivedEvent;
@@ -138,6 +139,26 @@ namespace SpotyScraper.Spotify
             request = request.Replace("\"", "%22");
             request = request.Replace("&", "%26");
             return request;
+        }
+
+        public async Task CreatePlaylist(string playlistName, IEnumerable<ITrackMatch> tracks)
+        {
+            if (!await this.CheckAuthentication())
+                return;
+
+            var user = await _spotify.GetPrivateProfileAsync();
+            var playlist = await _spotify.CreatePlaylistAsync(user.Id, playlistName);
+            if (playlist.HasError())
+            {
+                Debug.WriteLine($"Failed to create playlist {playlistName} because {playlist.Error.Message}");
+                return;
+            }
+
+            var uris = tracks
+                    .OfType<SpotifyTrack>()
+                    .Select(x => x.SpotifyUri)
+                    .ToList();
+            var response = await _spotify.AddPlaylistTracksAsync(user.Id, playlist.Id, uris);
         }
     }
 }
