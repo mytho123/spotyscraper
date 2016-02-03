@@ -155,10 +155,18 @@ namespace SpotyScraper.Spotify
             }
 
             var uris = tracks
-                    .OfType<SpotifyTrack>()
-                    .Select(x => x.SpotifyUri)
-                    .ToList();
-            var response = await _spotify.AddPlaylistTracksAsync(user.Id, playlist.Id, uris);
+                .OfType<SpotifyTrack>()
+                .Select(x => x.SpotifyUri)
+                .ToArray();
+            for (int split = 0; split < uris.Length; split += 100)
+            {
+                var splitUris = new List<string>(100);
+                for (int i = split; i < Math.Min(uris.Length, split + 100); i++)
+                {
+                    splitUris.Add(uris[i]);
+                }
+                var response = await _spotify.AddPlaylistTracksAsync(user.Id, playlist.Id, splitUris);
+            }
         }
     }
 }
