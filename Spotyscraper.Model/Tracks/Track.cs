@@ -43,7 +43,7 @@ namespace SpotyScraper.Model.Tracks
 
         public double SelectedMatchScore
         {
-            get { return this.Matches.ContainsKey(this.SelectedMatch) ? this.Matches[this.SelectedMatch] : double.NaN; }
+            get { return this.Matches != null && this.Matches.ContainsKey(this.SelectedMatch) ? this.Matches[this.SelectedMatch] : double.NaN; }
         }
 
         public void SetMatches(IEnumerable<ITrackMatch> matches)
