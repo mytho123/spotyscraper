@@ -15,7 +15,7 @@ namespace SpotyScraper.Model.Tracks
         public Track(string title, string[] artists)
         {
             this.Title = title;
-            this.Artists = artists;
+            this.Artists = artists ?? new string[0];
         }
 
         public string Title { get; }
@@ -75,6 +75,30 @@ namespace SpotyScraper.Model.Tracks
         private static string GetArtistsString(IEnumerable<string> artists)
         {
             return string.Join(",", artists);
+        }
+
+        public override string ToString()
+        {
+            return $"{this.Title} - {string.Join(", ", this.Artists)}";
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Title.GetHashCode() ^ this.Artists
+                .OrderBy(x => x)
+                .Select(x => x.GetHashCode())
+                .Aggregate((x1, x2) => x1 ^ x2);
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as Track;
+            if (other == null)
+                return false;
+
+            return object.Equals(this.Title, other.Title)
+                && this.Artists.Length == other.Artists.Length
+                && string.Concat(this.Artists.OrderBy(x => x)) == string.Concat(other.Artists.OrderBy(x => x));
         }
     }
 }

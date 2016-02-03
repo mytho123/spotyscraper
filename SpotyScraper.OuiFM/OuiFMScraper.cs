@@ -27,12 +27,17 @@ namespace SpotyScraper.OuiFM
 
         public IEnumerable<Track> Scrap()
         {
+            // check that tracks are unique
+            var returnedTracks = new HashSet<Track>();
+
             foreach (var pageURL in this.GetAllPagesURL())
             {
                 Debug.WriteLine($"{DateTime.Now} Oui FM scraper: {pageURL.Substring(79)}");
+
                 foreach (var track in this.ScrapPage(pageURL))
                 {
-                    yield return track;
+                    if (returnedTracks.Add(track))
+                        yield return track;
                 }
             }
         }
