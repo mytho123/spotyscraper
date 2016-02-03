@@ -74,6 +74,7 @@
     <Compile Include="StreamServices\StreamServicesManager.cs" />
     <Compile Include="Tracks\ITrackMatch.cs" />
     <Compile Include="Tracks\Track.cs" />
+    <Compile Include="Utils\PropertyChangeNotifier.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

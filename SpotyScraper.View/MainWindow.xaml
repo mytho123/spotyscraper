@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SpotyScraper.View"
         xmlns:vm="clr-namespace:SpotyScraper.ViewModel;assembly=SpotyScraper.ViewModel"
+        xmlns:conv="clr-namespace:SpotyScraper.View.Converters"
         mc:Ignorable="d"
         DataContext="{Binding Main, Source={x:Static vm:ViewModelLocator.Instance}}"
         Title="SpotyScraper" Height="350" Width="525">
@@ -47,7 +48,16 @@
       </Grid>
 
       <Grid Grid.Row="1">
-        <DataGrid ItemsSource="{Binding ScrapedTracks}" />
+        <DataGrid ItemsSource="{Binding ScrapedTracks}" AutoGenerateColumns="False" IsReadOnly="True">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Title" Binding="{Binding Title}" />
+            <DataGridTextColumn Header="Artists" Binding="{Binding Artists, Converter={x:Static conv:StringJoinConverter.Instance}}" />
+            <DataGridTextColumn Header="Matches #" Binding="{Binding Matches.Count}" />
+            <DataGridTextColumn Header="Selected match title" Binding="{Binding SelectedMatch.Title}" />
+            <DataGridTextColumn Header="Selected match artist" Binding="{Binding SelectedMatch.Artists, Converter={x:Static conv:StringJoinConverter.Instance}}" />
+            <DataGridTextColumn Header="Selected match score" Binding="{Binding SelectedMatchScore}" />
+          </DataGrid.Columns>
+        </DataGrid>
       </Grid>
     </Grid>
   </Grid>

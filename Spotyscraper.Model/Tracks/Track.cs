@@ -1,4 +1,5 @@
 ﻿using DuoVia.FuzzyStrings;
+using SpotyScraper.Model.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,28 +10,45 @@ using System.Threading.Tasks;
 
 namespace SpotyScraper.Model.Tracks
 {
-    public class Track
+    public class Track : PropertyChangeNotifier
     {
-        private readonly Dictionary<ITrackMatch, double> _matches;
-
         public Track(string title, string[] artists)
         {
             this.Title = title;
             this.Artists = artists;
-
-            _matches = new Dictionary<ITrackMatch, double>();
-            this.Matches = new ReadOnlyDictionary<ITrackMatch, double>(_matches);
         }
 
         public string Title { get; }
         public string[] Artists { get; }
-        public IReadOnlyDictionary<ITrackMatch, double> Matches { get; }
-        public ITrackMatch SelectedMatch { get; set; }
+
+        private IReadOnlyDictionary<ITrackMatch, double> _matches;
+
+        public IReadOnlyDictionary<ITrackMatch, double> Matches
+        {
+            get { return _matches; }
+            set { this.Set(ref _matches, value); }
+        }
+
+        private ITrackMatch _selectedMatch;
+
+        public ITrackMatch SelectedMatch
+        {
+            get { return _selectedMatch; }
+            set
+            {
+                this.Set(ref _selectedMatch, value);
+                this.RaisePropertyChanged(nameof(this.SelectedMatchScore));
+            }
+        }
+
+        public double SelectedMatchScore
+        {
+            get { return this.Matches.ContainsKey(this.SelectedMatch) ? this.Matches[this.SelectedMatch] : double.NaN; }
+        }
 
         public void SetMatches(IEnumerable<ITrackMatch> matches)
         {
-            _matches.Clear();
-
+            var result = new Dictionary<ITrackMatch, double>();
             foreach (var match in matches)
             {
                 var score = new double[]
@@ -38,10 +56,11 @@ namespace SpotyScraper.Model.Tracks
                         InverseLevenshtein(match.Title, this.Title),
                         InverseLevenshtein(GetArtistsString(match.Artists), GetArtistsString(this.Artists)),
                     }.Average();
-                _matches[match] = score;
+                result[match] = score;
             }
+            this.Matches = new ReadOnlyDictionary<ITrackMatch, double>(result);
 
-            this.SelectedMatch = _matches
+            this.SelectedMatch = this.Matches
                 .OrderByDescending(x => x.Value)
                 .Select(x => x.Key)
                 .FirstOrDefault();
