@@ -29,21 +29,12 @@ namespace SpotyScraper.Model.Tracks
             set { this.Set(ref _matches, value); }
         }
 
-        private ITrackMatch _selectedMatch;
+        private KeyValuePair<ITrackMatch, double> _selectedMatch;
 
-        public ITrackMatch SelectedMatch
+        public KeyValuePair<ITrackMatch, double> SelectedMatch
         {
             get { return _selectedMatch; }
-            set
-            {
-                this.Set(ref _selectedMatch, value);
-                this.RaisePropertyChanged(nameof(this.SelectedMatchScore));
-            }
-        }
-
-        public double SelectedMatchScore
-        {
-            get { return this.Matches != null && this.Matches.ContainsKey(this.SelectedMatch) ? this.Matches[this.SelectedMatch] : double.NaN; }
+            set { this.Set(ref _selectedMatch, value); }
         }
 
         public void SetMatches(IEnumerable<ITrackMatch> matches)
@@ -62,7 +53,6 @@ namespace SpotyScraper.Model.Tracks
 
             this.SelectedMatch = this.Matches
                 .OrderByDescending(x => x.Value)
-                .Select(x => x.Key)
                 .FirstOrDefault();
         }
 

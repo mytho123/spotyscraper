@@ -69,13 +69,13 @@
                                 Binding="{Binding Matches.Count}" />
             <DataGridTextColumn Header="Selected match title"
                                 Width="*"
-                                Binding="{Binding SelectedMatch.Title}" />
+                                Binding="{Binding SelectedMatch.Key.Title}" />
             <DataGridTextColumn Header="Selected match artist"
                                 Width="*"
-                                Binding="{Binding SelectedMatch.Artists, Converter={x:Static conv:StringJoinConverter.Instance}}" />
+                                Binding="{Binding SelectedMatch.Key.Artists, Converter={x:Static conv:StringJoinConverter.Instance}}" />
             <DataGridTextColumn Header="Selected match score"
                                 Width="Auto"
-                                Binding="{Binding SelectedMatchScore, StringFormat='{}{0:#,#.00}'}" />
+                                Binding="{Binding SelectedMatch.Value, StringFormat='{}{0:#,#.00}'}" />
           </DataGrid.Columns>
 
           <DataGrid.RowDetailsTemplate>
@@ -83,6 +83,7 @@
               <Grid>
                 <DataGrid ItemsSource="{Binding Matches}"
                           SelectionMode="Single"
+                          Loaded="RowDetails_DataGrid_Loaded" SelectionChanged="RowDetails_DataGrid_SelectionChanged"
                           AutoGenerateColumns="False"
                           IsReadOnly="True">
                   <DataGrid.Columns>

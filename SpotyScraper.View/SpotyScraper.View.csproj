@@ -121,6 +121,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Spotyscraper.Model\SpotyScraper.Model.csproj">
+      <Project>{f07534c1-998f-4180-8bdf-ec3af29394b3}</Project>
+      <Name>SpotyScraper.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SpotyScraper.OuiFM\SpotyScraper.OuiFM.csproj">
       <Project>{e384f3d0-c407-4779-9a03-3bc5405e0b3d}</Project>
       <Name>SpotyScraper.OuiFM</Name>
