@@ -24,6 +24,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotyScraper.Utils", "Spoty
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotyScraper.Spotify", "SpotyScraper.Spotify\SpotyScraper.Spotify.csproj", "{BB3FA20F-4571-4353-8241-45013D23E014}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotyScraper.Latina", "SpotyScraper.Latina\SpotyScraper.Latina.csproj", "{8C897379-5F34-4304-A3F3-5A4264131343}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotyScraper.Voltage", "SpotyScraper.Voltage\SpotyScraper.Voltage.csproj", "{6EFCB373-729C-4314-B70D-C6F525EC15BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +58,14 @@ Global
 		{BB3FA20F-4571-4353-8241-45013D23E014}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB3FA20F-4571-4353-8241-45013D23E014}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB3FA20F-4571-4353-8241-45013D23E014}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C897379-5F34-4304-A3F3-5A4264131343}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C897379-5F34-4304-A3F3-5A4264131343}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C897379-5F34-4304-A3F3-5A4264131343}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C897379-5F34-4304-A3F3-5A4264131343}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EFCB373-729C-4314-B70D-C6F525EC15BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EFCB373-729C-4314-B70D-C6F525EC15BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EFCB373-729C-4314-B70D-C6F525EC15BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EFCB373-729C-4314-B70D-C6F525EC15BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

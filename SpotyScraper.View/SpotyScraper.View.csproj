@@ -121,6 +121,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SpotyScraper.Latina\SpotyScraper.Latina.csproj">
+      <Project>{8c897379-5f34-4304-a3f3-5a4264131343}</Project>
+      <Name>SpotyScraper.Latina</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Spotyscraper.Model\SpotyScraper.Model.csproj">
       <Project>{f07534c1-998f-4180-8bdf-ec3af29394b3}</Project>
       <Name>SpotyScraper.Model</Name>
@@ -140,6 +144,10 @@
     <ProjectReference Include="..\SpotyScraper.ViewModel\SpotyScraper.ViewModel.csproj">
       <Project>{f19eef94-fcac-44d0-9304-5abb77fbe85e}</Project>
       <Name>SpotyScraper.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SpotyScraper.Voltage\SpotyScraper.Voltage.csproj">
+      <Project>{6efcb373-729c-4314-b70d-c6f525ec15bb}</Project>
+      <Name>SpotyScraper.Voltage</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
