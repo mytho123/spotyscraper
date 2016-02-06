@@ -23,7 +23,7 @@ namespace SpotyScraper.OuiFM
         public string Name { get; } = NAME;
         public string Description { get; } = DESCRIPTION;
 
-        public IEnumerable<Track> Scrap()
+        public IEnumerable<Track> Scrap(IProgress<double> progress)
         {
             throw new NotImplementedException();
         }

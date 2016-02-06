@@ -26,14 +26,18 @@ namespace SpotyScraper.Latina
         public string Name { get; } = NAME;
         public string Description { get; } = DESCRIPTION;
 
-        public IEnumerable<Track> Scrap()
+        public IEnumerable<Track> Scrap(IProgress<double> progress)
         {
-            foreach (var pageContent in this.GetAllPagesContent())
+            var funcs = this.GetAllPagesContentFuncs().ToArray();
+            int nbDone = 0;
+
+            foreach (var pageContent in funcs.Select(x => x()))
             {
                 foreach (var track in this.ScrapPage(pageContent))
                 {
                     yield return track;
                 }
+                progress.Report((double)nbDone++ / (double)funcs.Length);
             }
         }
 
@@ -46,14 +50,14 @@ namespace SpotyScraper.Latina
         public const string FORM_HOUR = "hhisto";
         public const string FORM_MINUTES = "minhisto";
 
-        private IEnumerable<string> GetAllPagesContent()
+        private IEnumerable<Func<string>> GetAllPagesContentFuncs()
         {
             var now = DateTime.Now;
 
             for (double hour = 24 * 7; hour >= 0; hour -= .5)
             {
                 var offset = TimeSpan.FromHours(hour);
-                yield return this.GetPageContent(now - offset);
+                yield return () => this.GetPageContent(now - offset);
             }
         }
 

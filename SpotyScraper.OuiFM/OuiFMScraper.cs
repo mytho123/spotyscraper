@@ -23,16 +23,19 @@ namespace SpotyScraper.OuiFM
         public string Name { get; } = NAME;
         public string Description { get; } = DESCRIPTION;
 
-        public IEnumerable<Track> Scrap()
+        public IEnumerable<Track> Scrap(IProgress<double> progress)
         {
-            foreach (var pageURL in this.GetAllPagesURL())
-            {
-                Debug.WriteLine($"{DateTime.Now} Oui FM scraper: {pageURL.Substring(79)}");
+            var pageURLs = this.GetAllPagesURL().ToArray();
+            int nbDone = 0;
 
+            foreach (var pageURL in pageURLs)
+            {
                 foreach (var track in this.ScrapPage(pageURL))
                 {
                     yield return track;
                 }
+                Debug.WriteLine($"{DateTime.Now} Oui FM scraper: {pageURL.Substring(79)}");
+                progress.Report((double)nbDone++ / (double)pageURLs.Length);
             }
         }
 

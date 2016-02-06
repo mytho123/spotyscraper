@@ -12,6 +12,6 @@ namespace SpotyScraper.Model.Scrapers
         string Name { get; }
         string Description { get; }
 
-        IEnumerable<Track> Scrap();
+        IEnumerable<Track> Scrap(IProgress<double> progress);
     }
 }

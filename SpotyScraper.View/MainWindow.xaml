@@ -10,6 +10,12 @@
         DataContext="{Binding Main, Source={x:Static vm:ViewModelLocator.Instance}}"
         Title="SpotyScraper"
         Width="1024" Height="768" SizeToContent="Manual">
+  <Window.Resources>
+    <Style TargetType="ProgressBar">
+      <Setter Property="Height" Value="10" />
+    </Style>
+  </Window.Resources>
+
   <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="3*" />
@@ -29,29 +35,32 @@
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0">
+        <!-- Scraping -->
+        <StackPanel Grid.Column="0" Margin="5">
           <TextBlock Text="Select your scraper"
                      HorizontalAlignment="Center" />
           <ComboBox ItemsSource="{Binding Scrapers}"
                     DisplayMemberPath="Name"
                     SelectedItem="{Binding SelectedScraper}" />
           <Button Content="Scrap !" Command="{Binding ScrapCommand}" />
-          <TextBlock>
-            <Run Text="{Binding ScrapedTracks.Count, Mode=OneWay}" />
-            <Run Text=" tracks" />
-          </TextBlock>
+          <ProgressBar Minimum="0" Maximum="1"
+                       Value="{Binding ScrapProgress}" />
         </StackPanel>
 
-        <StackPanel Grid.Column="1">
+        <!-- Resolving -->
+        <StackPanel Grid.Column="1" Margin="5">
           <TextBlock Text="Select your stream service"
                      HorizontalAlignment="Center" />
           <ComboBox ItemsSource="{Binding StreamServices}"
                     DisplayMemberPath="Name"
                     SelectedItem="{Binding SelectedStreamService}" />
           <Button Content="Resolve !" Command="{Binding ResolveCommand}" />
+          <ProgressBar Minimum="0" Maximum="1"
+                       Value="{Binding ResolveProgress}" />
         </StackPanel>
 
-        <StackPanel Grid.Column="2">
+        <!-- Playlisting -->
+        <StackPanel Grid.Column="2" Margin="5">
           <TextBlock Text="Enter playlist name"
                      HorizontalAlignment="Center" />
           <TextBox Text="{Binding PlaylistName}" />
@@ -61,7 +70,19 @@
 
       <!-- list of tracks -->
       <Grid Grid.Row="1">
-        <DataGrid ItemsSource="{Binding ScrapedTracks}"
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+          <TextBlock HorizontalAlignment="Center">
+            <Run Text="Tracks found: " />
+            <Run Text="{Binding ScrapedTracks.Count, Mode=OneWay}" />
+          </TextBlock>
+        </Grid>
+
+        <DataGrid Grid.Row="1" ItemsSource="{Binding ScrapedTracks}"
                   SelectionMode="Single"
                   SelectedItem="{Binding SelectedTrack}"
                   AutoGenerateColumns="False" CanUserSortColumns="True"
@@ -94,8 +115,8 @@
 
     <!-- details -->
     <Grid Grid.Column="1" DataContext="{Binding SelectedTrack}">
-      <StackPanel>
-        <TextBlock Text="Select a track to iew its details here" />
+      <StackPanel Margin="5">
+        <TextBlock Text="Select a track to view its details here" />
 
         <TextBlock Text="Title" />
         <TextBox Text="{Binding Title}" />

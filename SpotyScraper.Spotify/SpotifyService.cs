@@ -108,14 +108,18 @@ namespace SpotyScraper.Spotify
 
         #endregion Authentication
 
-        public async Task ResolveAsync(IEnumerable<Track> tracks)
+        public async Task ResolveAsync(IEnumerable<Track> tracks, IProgress<double> progress)
         {
             if (!await this.CheckAuthentication())
                 return;
 
-            foreach (var track in tracks)
+            var tracksFixed = tracks.ToArray();
+            int nbDone = 0;
+
+            foreach (var track in tracksFixed)
             {
                 await this.ResolveAsync(track);
+                progress.Report((double)++nbDone / (double)tracksFixed.Length);
                 await Task.Delay(50); // avoid "API rate limit exceeded"
             }
         }
