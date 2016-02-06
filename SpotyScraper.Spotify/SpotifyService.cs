@@ -122,8 +122,11 @@ namespace SpotyScraper.Spotify
 
         public async Task ResolveAsync(Track track)
         {
-            var artist = track.Artists.FirstOrDefault();
-            var q = $"track:%22{track.Title}%22&artist:\"{artist}\"";
+            string title;
+            string artist;
+            this.PrepareTrack(track, out title, out artist);
+
+            var q = $"track:%22{title}%22&artist:\"{artist}\"";
             q = PreprocessRequest(q);
 
             var searchItem = await _spotify.SearchItemsAsync(q, SearchType.Track, 50);
@@ -133,6 +136,16 @@ namespace SpotyScraper.Spotify
                 .Select(x => new SpotifyTrack(x));
             if (spotifyTracks != null)
                 track.SetMatches(spotifyTracks);
+        }
+
+        private void PrepareTrack(Track track, out string title, out string artist)
+        {
+            title = track.Title;
+            artist = track.Artists.FirstOrDefault();
+
+            artist = artist
+                .Replace('\'', ' ')
+                .Replace('.', ' ');
         }
 
         private static string PreprocessRequest(string request)
