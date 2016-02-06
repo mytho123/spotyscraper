@@ -97,7 +97,7 @@ namespace SpotyScraper.Model.Tracks
 
         public int GetHashCode(Track obj)
         {
-            return obj.GetHashCode() ^ obj.Artists
+            return obj.Title.GetHashCode() ^ obj.Artists
                 .OrderBy(x => x)
                 .Select(x => x.GetHashCode())
                 .Aggregate((x1, x2) => x1 ^ x2);
