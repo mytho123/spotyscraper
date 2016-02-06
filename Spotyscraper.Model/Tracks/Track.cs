@@ -71,24 +71,23 @@ namespace SpotyScraper.Model.Tracks
         {
             return $"{this.Title} - {string.Join(", ", this.Artists)}";
         }
+    }
 
-        public override int GetHashCode()
+    public class TrackComparer : IEqualityComparer<Track>
+    {
+        public bool Equals(Track x, Track y)
         {
-            return this.Title.GetHashCode() ^ this.Artists
+            return object.Equals(x.Title, y.Title)
+                && x.Artists.Length == y.Artists.Length
+                && string.Concat(x.Artists.OrderBy(t => t)) == string.Concat(y.Artists.OrderBy(t => t));
+        }
+
+        public int GetHashCode(Track obj)
+        {
+            return obj.GetHashCode() ^ obj.Artists
                 .OrderBy(x => x)
                 .Select(x => x.GetHashCode())
                 .Aggregate((x1, x2) => x1 ^ x2);
-        }
-
-        public override bool Equals(object obj)
-        {
-            var other = obj as Track;
-            if (other == null)
-                return false;
-
-            return object.Equals(this.Title, other.Title)
-                && this.Artists.Length == other.Artists.Length
-                && string.Concat(this.Artists.OrderBy(x => x)) == string.Concat(other.Artists.OrderBy(x => x));
         }
     }
 }

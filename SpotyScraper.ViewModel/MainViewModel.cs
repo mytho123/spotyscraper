@@ -123,7 +123,9 @@ namespace SpotyScraper.ViewModel
         {
             await Task.Run(() =>
             {
-                foreach (var track in scraper.Scrap())
+                var tracks = scraper.Scrap()
+                    .Distinct(new TrackComparer());
+                foreach (var track in tracks)
                 {
                     DispatcherHelper.CheckBeginInvokeOnUI(() => this.ScrapedTracks.Add(track));
                 }

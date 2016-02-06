@@ -28,15 +28,11 @@ namespace SpotyScraper.Latina
 
         public IEnumerable<Track> Scrap()
         {
-            // check that tracks are unique
-            var returnedTracks = new HashSet<Track>();
-
             foreach (var pageContent in this.GetAllPagesContent())
             {
                 foreach (var track in this.ScrapPage(pageContent))
                 {
-                    if (returnedTracks.Add(track))
-                        yield return track;
+                    yield return track;
                 }
             }
         }
