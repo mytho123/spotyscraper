@@ -12,6 +12,7 @@
         Width="1024" Height="768" SizeToContent="Manual">
   <Grid>
     <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="3*" />
       <ColumnDefinition Width="*" />
     </Grid.ColumnDefinitions>
 
@@ -58,11 +59,13 @@
         </StackPanel>
       </Grid>
 
+      <!-- list of tracks -->
       <Grid Grid.Row="1">
         <DataGrid ItemsSource="{Binding ScrapedTracks}"
                   SelectionMode="Single"
+                  SelectedItem="{Binding SelectedTrack}"
                   AutoGenerateColumns="False" CanUserSortColumns="True"
-                  RowDetailsVisibilityMode="VisibleWhenSelected"
+                  RowDetailsVisibilityMode="Collapsed"
                   IsReadOnly="True"
                   HorizontalScrollBarVisibility="Disabled">
           <DataGrid.Columns>
@@ -85,32 +88,49 @@
                                 Width="Auto"
                                 Binding="{Binding SelectedMatch.Value, StringFormat='{}{0:#,#.00}'}" />
           </DataGrid.Columns>
-
-          <DataGrid.RowDetailsTemplate>
-            <DataTemplate>
-              <Grid>
-                <DataGrid ItemsSource="{Binding Matches}"
-                          SelectionMode="Single"
-                          Loaded="RowDetails_DataGrid_Loaded" SelectionChanged="RowDetails_DataGrid_SelectionChanged"
-                          AutoGenerateColumns="False"
-                          IsReadOnly="True">
-                  <DataGrid.Columns>
-                    <DataGridTextColumn Header="Title"
-                                        Width="*"
-                                        Binding="{Binding Key.Title}" />
-                    <DataGridTextColumn Header="Artists"
-                                        Width="*"
-                                        Binding="{Binding Key.Artists, Converter={x:Static conv:StringJoinConverter.Instance}}" />
-                    <DataGridTextColumn Header="Score"
-                                        Width="Auto"
-                                        Binding="{Binding Value, StringFormat='{}{0:#,#.00}'}" />
-                  </DataGrid.Columns>
-                </DataGrid>
-              </Grid>
-            </DataTemplate>
-          </DataGrid.RowDetailsTemplate>
         </DataGrid>
       </Grid>
+    </Grid>
+
+    <!-- details -->
+    <Grid Grid.Column="1" DataContext="{Binding SelectedTrack}">
+      <StackPanel>
+        <TextBlock Text="Select a track to iew its details here" />
+
+        <TextBlock Text="Title" />
+        <TextBox Text="{Binding Title}" />
+
+        <TextBlock Text="Artists" />
+        <TextBox Text="{Binding Artists, Converter={x:Static conv:StringJoinConverter.Instance}}" />
+
+        <Button Content="Resolve this track"
+                Command="{Binding Main.ResolveCommand, Source={x:Static vm:ViewModelLocator.Instance}}"
+                CommandParameter="{Binding}" />
+
+        <TextBlock Text="Selected match" />
+        <TextBlock Text="{Binding SelectedMatch.Key.Title}" />
+        <TextBlock Text="{Binding SelectedMatch.Key.Artists, Converter={x:Static conv:StringJoinConverter.Instance}}" />
+        <TextBlock Text="{Binding SelectedMatch.Value}" />
+
+        <TextBlock Text="Matches found :" />
+        <DataGrid ItemsSource="{Binding Matches}"
+                  SelectionMode="Single"
+                  Loaded="RowDetails_DataGrid_Loaded" SelectionChanged="RowDetails_DataGrid_SelectionChanged"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Title"
+                                Width="*"
+                                Binding="{Binding Key.Title}" />
+            <DataGridTextColumn Header="Artists"
+                                Width="*"
+                                Binding="{Binding Key.Artists, Converter={x:Static conv:StringJoinConverter.Instance}}" />
+            <DataGridTextColumn Header="Score"
+                                Width="Auto"
+                                Binding="{Binding Value, StringFormat='{}{0:#,#.00}'}" />
+          </DataGrid.Columns>
+        </DataGrid>
+      </StackPanel>
     </Grid>
   </Grid>
 </Window>

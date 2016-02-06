@@ -18,7 +18,7 @@ namespace SpotyScraper.ViewModel
         public MainViewModel()
         {
             this.ScrapCommand = new RelayCommand(ScrapCommand_Execute, ScrapCommand_CanExecute);
-            this.ResolveCommand = new RelayCommand(ResolveCommand_Execute, ResolveCommand_CanExecute);
+            this.ResolveCommand = new RelayCommand<object>(ResolveCommand_Execute, ResolveCommand_CanExecute);
             this.CreatePlaylistCommand = new RelayCommand(CreatePlaylistCommand_Execute, CreatePlaylistCommand_CanExecute);
 
             this.InitScrapers();
@@ -69,6 +69,14 @@ namespace SpotyScraper.ViewModel
                 this.Set(ref _selectedStreamService, value);
                 this.ResolveCommand.RaiseCanExecuteChanged();
             }
+        }
+
+        private Track _selectedTrack;
+
+        public Track SelectedTrack
+        {
+            get { return _selectedTrack; }
+            set { this.Set(ref _selectedTrack, value); }
         }
 
         private bool _isResolving;
@@ -132,23 +140,26 @@ namespace SpotyScraper.ViewModel
             });
         }
 
-        public RelayCommand ResolveCommand { get; }
+        public RelayCommand<object> ResolveCommand { get; }
 
-        private bool ResolveCommand_CanExecute()
+        private bool ResolveCommand_CanExecute(object arg)
         {
             return this.SelectedStreamService != null && !this.IsResolving;
         }
 
-        private async void ResolveCommand_Execute()
+        private async void ResolveCommand_Execute(object arg)
         {
             var service = StreamServicesManager.Instance.GetService(this.SelectedStreamService);
             if (service == null)
                 return;
 
+            var track = arg as Track;
+            var tracks = track != null ? new Track[] { track } : this.ScrapedTracks.ToArray();
+
             this.IsResolving = true;
             try
             {
-                await service.ResolveAsync(this.ScrapedTracks.ToArray());
+                await service.ResolveAsync(tracks);
             }
             finally
             {

@@ -18,8 +18,21 @@ namespace SpotyScraper.Model.Tracks
             this.Artists = artists ?? new string[0];
         }
 
-        public string Title { get; }
-        public string[] Artists { get; }
+        private string _title;
+
+        public string Title
+        {
+            get { return _title; }
+            set { this.Set(ref _title, value); }
+        }
+
+        private string[] _artists;
+
+        public string[] Artists
+        {
+            get { return _artists; }
+            set { this.Set(ref _artists, value); }
+        }
 
         private IReadOnlyDictionary<ITrackMatch, double> _matches;
 

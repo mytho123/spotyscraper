@@ -28,7 +28,15 @@ namespace SpotyScraper.View.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            var str = value as string;
+            if (str != null)
+            {
+                return str.Split(',').Select(x => x.Trim()).ToArray();
+            }
+            else
+            {
+                return value;
+            }
         }
     }
 }
