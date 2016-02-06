@@ -116,6 +116,7 @@ namespace SpotyScraper.Spotify
             foreach (var track in tracks)
             {
                 await this.ResolveAsync(track);
+                await Task.Delay(50); // avoid "API rate limit exceeded"
             }
         }
 
