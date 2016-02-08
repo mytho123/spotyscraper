@@ -54,6 +54,15 @@
           <ComboBox ItemsSource="{Binding StreamServices}"
                     DisplayMemberPath="Name"
                     SelectedItem="{Binding SelectedStreamService}" />
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Minimum score to match" />
+            <TextBox Grid.Column="1" Text="{Binding MinimumScore}" />
+          </Grid>
           <Button Content="Resolve !" Command="{Binding ResolveCommand}" />
           <ProgressBar Minimum="0" Maximum="1"
                        Value="{Binding ResolveProgress}" />

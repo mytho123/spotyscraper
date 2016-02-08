@@ -12,6 +12,8 @@ namespace SpotyScraper.Model.Tracks
 {
     public class Track : PropertyChangeNotifier
     {
+        public static double MinimumScoreToMatch { get; set; } = .1;
+
         public Track(string title, string[] artists)
         {
             this.Title = title;
@@ -52,6 +54,8 @@ namespace SpotyScraper.Model.Tracks
 
         public void SetMatches(IEnumerable<ITrackMatch> matches)
         {
+            this.SelectedMatch = new KeyValuePair<ITrackMatch, double>();
+
             var result = new Dictionary<ITrackMatch, double>();
             foreach (var match in matches)
             {
@@ -64,9 +68,14 @@ namespace SpotyScraper.Model.Tracks
             }
             this.Matches = new ReadOnlyDictionary<ITrackMatch, double>(result);
 
-            this.SelectedMatch = this.Matches
+            var bestMatch = this.Matches
                 .OrderByDescending(x => x.Value)
                 .FirstOrDefault();
+
+            if (bestMatch.Value >= MinimumScoreToMatch)
+            {
+                this.SelectedMatch = bestMatch;
+            }
         }
 
         private static double InverseLevenshtein(string str1, string str2)

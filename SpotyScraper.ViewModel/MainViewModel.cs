@@ -7,6 +7,7 @@ using SpotyScraper.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -115,6 +116,14 @@ namespace SpotyScraper.ViewModel
             set { this.Set(ref _playlistName, value); }
         }
 
+        private double _minimumScore = .1;
+
+        public double MinimumScore
+        {
+            get { return _minimumScore; }
+            set { this.Set(ref _minimumScore, value); }
+        }
+
         #endregion props
 
         #region Commands
@@ -135,7 +144,9 @@ namespace SpotyScraper.ViewModel
             this.IsScraping = true;
             try
             {
+                var sw = Stopwatch.StartNew();
                 await this.ScrapAsync(scraper);
+                Debug.WriteLine($"Scraping took {sw.ElapsedMilliseconds}ms");
             }
             finally
             {
@@ -182,10 +193,14 @@ namespace SpotyScraper.ViewModel
                 DispatcherHelper.CheckBeginInvokeOnUI(() => this.ResolveProgress = x);
             });
 
+            Track.MinimumScoreToMatch = this.MinimumScore;
+
             this.IsResolving = true;
             try
             {
+                var sw = Stopwatch.StartNew();
                 await service.ResolveAsync(tracks, progress);
+                Debug.WriteLine($"Resolving took {sw.ElapsedMilliseconds}ms");
             }
             finally
             {
