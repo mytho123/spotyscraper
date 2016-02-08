@@ -25,6 +25,7 @@ namespace SpotyScraper.Spotify
     {
         public const string NAME = "Spotify";
         public const string DESCRIPTION = "Spotify streaming service";
+        public readonly TimeSpan REQUESTSDELAY = TimeSpan.FromMilliseconds(25);
 
         public string Name { get; } = NAME;
 
@@ -120,7 +121,7 @@ namespace SpotyScraper.Spotify
             {
                 await this.ResolveAsync(track);
                 progress.Report((double)++nbDone / (double)tracksFixed.Length);
-                await Task.Delay(50); // avoid "API rate limit exceeded"
+                await Task.Delay(REQUESTSDELAY); // avoid "API rate limit exceeded"
             }
         }
 
@@ -132,30 +133,75 @@ namespace SpotyScraper.Spotify
 
             var q = $"track:%22{title}%22&artist:\"{artist}\"";
             q = PreprocessRequest(q);
-
             var searchItem = await _spotify.SearchItemsAsync(q, SearchType.Track, 50);
+            LogIfError(q, searchItem);
+
+            // if no result found, search for title only
+            if (searchItem.Tracks?.Items?.Count == 0)
+            {
+                await Task.Delay(REQUESTSDELAY); // avoid "API rate limit exceeded"
+
+                q = $"track:%22{title}%22";
+                q = PreprocessRequest(q);
+                searchItem = await _spotify.SearchItemsAsync(q, SearchType.Track, 50);
+                LogIfError(q, searchItem);
+            }
 
             var spotifyTracks = searchItem?.Tracks?.Items
                 .OrderByDescending(x => x.Popularity)
                 .Select(x => new SpotifyTrack(x));
+
             if (spotifyTracks != null)
                 track.SetMatches(spotifyTracks);
+        }
+
+        private static void LogIfError(string q, SearchItem searchItem)
+        {
+            if (searchItem.HasError())
+            {
+                Debug.WriteLine($"Spotify returned an error: {searchItem.Error}");
+                Debug.WriteLine($"Request was: {q}");
+            }
         }
 
         private void PrepareTrack(Track track, out string title, out string artist)
         {
             title = track.Title;
-            artist = track.Artists.FirstOrDefault();
+            title = RemoveFromCharacterToEnd(title, '(');
+            title = RemoveFromCharacterToEnd(title, '[');
+            //title = title.Replace('\'', ' ');
 
+            artist = track.Artists.FirstOrDefault();
+            if (artist.EndsWith("..."))
+            {
+                var lastSpaceIndex = artist.LastIndexOf(' ');
+                if (lastSpaceIndex != -1)
+                    artist = artist.Substring(0, lastSpaceIndex);
+            }
             artist = artist
                 .Replace('\'', ' ')
                 .Replace('.', ' ');
         }
 
+        private static string RemoveFromCharacterToEnd(string title, char character)
+        {
+            var parenthesisIndex = title.IndexOf(character);
+            if (parenthesisIndex > 1)
+            {
+                title = title.Substring(0, parenthesisIndex).Trim();
+            }
+            return title;
+        }
+
         private static string PreprocessRequest(string request)
         {
-            request = request.Replace("\"", "%22");
-            request = request.Replace("&", "%26");
+            // spotify uses a kind of Uri.EscapeDataString(request)
+            request = request
+                .Replace("\"", "%22")
+                .Replace("#", "%23")
+                .Replace("&", "%26")
+                .Replace("'", "%27")
+                .Replace("+", "%2B");
             return request;
         }
 
