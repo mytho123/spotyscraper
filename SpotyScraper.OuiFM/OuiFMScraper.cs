@@ -28,13 +28,20 @@ namespace SpotyScraper.OuiFM
             var pageURLs = this.GetAllPagesURL().ToArray();
             int nbDone = 0;
 
-            foreach (var pageURL in pageURLs)
+            var tasks = new Task<IEnumerable<Track>>[pageURLs.Length];
+            for (int i = 0; i < tasks.Length; i++)
             {
-                foreach (var track in this.ScrapPage(pageURL))
+                var pageURL = pageURLs[i];
+                tasks[i] = Task.Run(async () => await this.ScrapPage(pageURL));
+            }
+
+            for (int i = 0; i < tasks.Length; i++)
+            {
+                foreach (var track in tasks[i].GetAwaiter().GetResult())
                 {
                     yield return track;
                 }
-                Debug.WriteLine($"{DateTime.Now} Oui FM scraper: {pageURL.Substring(79)}");
+                Debug.WriteLine($"{DateTime.Now} Oui FM scraper: { pageURLs[i].Substring(79)}");
                 progress.Report((double)nbDone++ / (double)pageURLs.Length);
             }
         }
@@ -57,11 +64,12 @@ namespace SpotyScraper.OuiFM
             return $"http://www.ouifm.fr/wp-admin/admin-ajax.php?action=get_piges_results&flux=rock&date={date.Year}-{month}-{day}&time={date.Hour}";
         }
 
-        private IEnumerable<Track> ScrapPage(string pageURL)
+        private async Task<IEnumerable<Track>> ScrapPage(string pageURL)
         {
             var request = WebRequest.CreateHttp(pageURL);
-            var response = request.GetResponse();
+            var response = await request.GetResponseAsync();
 
+            var result = new List<Track>();
             using (var stream = response.GetResponseStream())
             {
                 var doc = new HtmlDocument();
@@ -76,10 +84,12 @@ namespace SpotyScraper.OuiFM
                         var track = ProcessTrack(titleNode.InnerText, artistNode.InnerText);
 
                         if (track != null)
-                            yield return track;
+                            result.Add(track);
                     }
                 }
             }
+
+            return result;
         }
 
         #region Tracks pre processing
