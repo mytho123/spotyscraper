@@ -61,7 +61,7 @@ namespace SpotyScraper.OuiFM
         {
             var month = date.Month.ToString("D2");
             var day = date.Day.ToString("D2");
-            return $"http://www.ouifm.fr/wp-admin/admin-ajax.php?action=get_piges_results&flux=rock&date={date.Year}-{month}-{day}&time={date.Hour}";
+            return $"http://www.ouifm.fr/wp/wp-admin/admin-ajax.php?action=get_piges_results&flux=rock&date={date.Year}-{month}-{day}&time={date.Hour}";
         }
 
         private async Task<IEnumerable<Track>> ScrapPage(string pageURL)
